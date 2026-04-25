@@ -10,6 +10,17 @@ export default defineConfig(({ mode }) => ({
     hmr: {
       overlay: false,
     },
+    middlewareMode: true,
+  },
+  preview: {
+    host: "0.0.0.0",
+    port: 3000,
+    allowedHosts: [
+      "khatalens-frontend-production.up.railway.app",
+      "localhost",
+      "127.0.0.1",
+      "0.0.0.0",
+    ],
   },
   plugins: [react()],
   resolve: {
