@@ -11,3 +11,15 @@ __pycache__/
 .vscode/
 dist/
 build/
+src/
+public/
+index.html
+package.json
+package-lock.json
+vite.config.ts
+tsconfig.json
+tailwind.config.js
+postcss.config.js
+components.json
+vercel.json
+.vercelignore
