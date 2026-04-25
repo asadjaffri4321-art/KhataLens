@@ -1,4 +1,29 @@
+# Ignore all frontend files
 node_modules/
+src/
+public/
+dist/
+build/
+*.tsx
+*.ts
+*.jsx
+*.js
+!api.py
+!khata_ocr.py
+index.html
+package.json
+package-lock.json
+bun.lockb
+vite.config.ts
+tsconfig.json
+tailwind.config.js
+postcss.config.js
+components.json
+vercel.json
+.vercelignore
+eslint.config.js
+
+# Standard ignores
 .git/
 .kiro/
 __pycache__/
@@ -9,17 +34,3 @@ __pycache__/
 *.db-shm
 *.db-wal
 .vscode/
-dist/
-build/
-src/
-public/
-index.html
-package.json
-package-lock.json
-vite.config.ts
-tsconfig.json
-tailwind.config.js
-postcss.config.js
-components.json
-vercel.json
-.vercelignore

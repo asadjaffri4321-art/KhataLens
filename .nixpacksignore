@@ -1,0 +1,10 @@
+package.json
+package-lock.json
+bun.lockb
+node_modules/
+src/
+public/
+dist/
+index.html
+vite.config.ts
+tsconfig.json
