@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import { motion } from "framer-motion";
-import { ArrowRight, Check, X, Camera, Brain, MessageSquare, BarChart3, Eye, ScanLine, Star, BookOpen, Send } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { ArrowRight, Check, X, Camera, Brain, MessageSquare, BarChart3, Eye, ScanLine, Star, BookOpen, Send, Menu } from "lucide-react";
 import { Reveal } from "@/components/Reveal";
 import { ScribbleUnderline } from "@/components/ScribbleUnderline";
 import { HeroCTA } from "@/components/HeroCTA";
@@ -16,16 +16,25 @@ const Logo = () => (
 
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   useEffect(() => {
     const onScroll = () => setIsScrolled(window.scrollY > 8);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  // Lock body scroll when mobile menu is open
+  useEffect(() => {
+    document.body.style.overflow = mobileMenuOpen ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [mobileMenuOpen]);
+
   return (
+  <>
   <header
     className={cn(
-      "fixed top-0 inset-x-0 z-50 h-20 transition-all duration-300",
+      "fixed top-0 inset-x-0 z-50 h-16 sm:h-20 transition-all duration-300",
       isScrolled
         ? "border-b border-border/70 bg-background/80 backdrop-blur-md"
         : "border-b border-transparent bg-transparent"
@@ -44,14 +53,81 @@ const Header = () => {
           whileHover={{ scale: 1.05, y: -1 }}
           whileTap={{ scale: 0.95 }}
           href="/login" 
-          className="inline-flex items-center gap-2 rounded-full bg-primary text-primary-foreground px-5 py-2.5 text-sm font-semibold transition-all shadow-md hover:shadow-lg hover:shadow-primary/20"
+          className="hidden sm:inline-flex items-center gap-2 rounded-full bg-primary text-primary-foreground px-5 py-2.5 text-sm font-semibold transition-all shadow-md hover:shadow-lg hover:shadow-primary/20"
         >
           Try KhataLens
           <ArrowRight className="size-4" />
         </motion.a>
+        {/* Mobile hamburger */}
+        <button
+          onClick={() => setMobileMenuOpen(true)}
+          className="md:hidden flex size-10 items-center justify-center rounded-full border border-border text-ink hover:bg-surface/50 transition-colors"
+          aria-label="Open menu"
+        >
+          <Menu className="size-5" />
+        </button>
       </div>
     </div>
   </header>
+
+  {/* Mobile slide-in menu */}
+  <AnimatePresence>
+    {mobileMenuOpen && (
+      <>
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 z-[60] bg-black/40 backdrop-blur-sm"
+          onClick={() => setMobileMenuOpen(false)}
+        />
+        <motion.div
+          initial={{ x: "100%" }}
+          animate={{ x: 0 }}
+          exit={{ x: "100%" }}
+          transition={{ type: "spring", damping: 30, stiffness: 300 }}
+          className="fixed top-0 right-0 bottom-0 z-[70] w-72 bg-background border-l border-border shadow-2xl flex flex-col"
+        >
+          <div className="flex items-center justify-between p-5 border-b border-border">
+            <span className="text-xs font-bold uppercase tracking-[0.25em] text-ink-soft">Menu</span>
+            <button
+              onClick={() => setMobileMenuOpen(false)}
+              className="flex size-9 items-center justify-center rounded-full border border-border text-ink-soft hover:bg-surface/50"
+            >
+              <X className="size-4" />
+            </button>
+          </div>
+          <nav className="flex-1 flex flex-col gap-1 p-4">
+            {[
+              { href: "#features", label: "AI Layers" },
+              { href: "#how", label: "How it works" },
+              { href: "#problem", label: "Why KhataLens" },
+              { href: "#testimonials", label: "Impact" },
+            ].map(link => (
+              <a
+                key={link.href}
+                href={link.href}
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-ink hover:bg-primary/5 hover:text-primary transition-colors"
+              >
+                {link.label}
+              </a>
+            ))}
+          </nav>
+          <div className="p-4 border-t border-border">
+            <a
+              href="/login"
+              className="flex items-center justify-center gap-2 rounded-full bg-primary text-primary-foreground px-5 py-3 text-sm font-semibold shadow-md w-full"
+            >
+              Try KhataLens
+              <ArrowRight className="size-4" />
+            </a>
+          </div>
+        </motion.div>
+      </>
+    )}
+  </AnimatePresence>
+  </>
   );
 };
 
@@ -62,7 +138,7 @@ const Hero = () => {
     setTrigger(sectionRef.current);
   }, []);
   return (
-  <section ref={sectionRef} className="relative pt-36 pb-28 bg-grid overflow-hidden">
+  <section ref={sectionRef} className="relative pt-24 sm:pt-36 pb-16 sm:pb-28 bg-grid overflow-hidden">
     <div className="absolute inset-0 bg-gradient-to-b from-background/0 via-background/30 to-background pointer-events-none" />
     {/* Centered 3D cube — sits BEHIND the headline */}
     <div
@@ -83,7 +159,7 @@ const Hero = () => {
       </Reveal>
 
       <div className="mt-8 text-center">
-        <h1 className="font-display text-ink text-[11vw] sm:text-5xl md:text-7xl lg:text-[8rem] leading-[0.95] tracking-[-0.02em]">
+        <h1 className="font-display text-ink text-[12vw] sm:text-5xl md:text-7xl lg:text-[8rem] leading-[0.95] tracking-[-0.02em]">
           <span className="block">SNAP KHATA,</span>
           <span className="block mt-1">
             <ScribbleUnderline>GET</ScribbleUnderline>{" "}
@@ -197,7 +273,7 @@ const SocialProof = () => (
 const ProblemSolution = () => (
   <section id="problem" className="grid md:grid-cols-2 border-b border-border">
     {/* Problem */}
-    <div className="bg-primary-darker text-background p-10 md:p-16 bg-grid-dark">
+    <div className="bg-primary-darker text-background p-6 sm:p-10 md:p-16 bg-grid-dark">
       <Reveal>
         <div className="text-[11px] sm:text-xs uppercase tracking-[0.25em] text-background/60 font-semibold">The paper problem</div>
         <h3 className="mt-6 font-display text-3xl sm:text-5xl md:text-6xl uppercase">
@@ -219,7 +295,7 @@ const ProblemSolution = () => (
       </Reveal>
     </div>
     {/* Solution */}
-    <div className="bg-primary text-primary-foreground p-10 md:p-16 border-l-4 border-background/10 relative overflow-hidden">
+    <div className="bg-primary text-primary-foreground p-6 sm:p-10 md:p-16 border-l-4 border-background/10 relative overflow-hidden">
       <div className="absolute inset-0 bg-grid-dark opacity-40" />
       <Reveal className="relative">
         <div className="text-[11px] sm:text-xs uppercase tracking-[0.25em] text-primary-foreground/80 font-semibold">The KhataLens way</div>
@@ -531,7 +607,7 @@ const FinalCTA = () => (
 
 const Footer = () => (
   <footer className="bg-primary-darker text-background/70 border-t border-background/10">
-    <div className="container py-16 grid md:grid-cols-4 gap-10">
+    <div className="container py-10 sm:py-16 grid grid-cols-2 md:grid-cols-4 gap-8 sm:gap-10">
       <div>
         <img src="/Logo.png" alt="KhataLens" className="h-10 w-auto" />
         <p className="mt-4 text-sm max-w-xs">AI-powered paper-to-ledger assistant for Pakistan's small businesses. From paper chaos to digital control.</p>

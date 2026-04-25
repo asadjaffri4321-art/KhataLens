@@ -74,7 +74,7 @@ export default function Login({ cubeShouldAssemble = true }: LoginProps) {
           className={`flex flex-col items-center transition-all duration-1000 ease-in-out ${showForm ? "opacity-0 scale-150 blur-2xl pointer-events-none absolute" : "opacity-100 scale-100 blur-0"
             }`}
         >
-          <div className="relative h-[400px] w-[400px] sm:h-[500px] sm:w-[500px]">
+          <div className="relative h-[280px] w-[280px] sm:h-[400px] sm:w-[400px] md:h-[500px] md:w-[500px]">
             <BrandedRubiksCube
               className="h-full w-full"
               variant="login"

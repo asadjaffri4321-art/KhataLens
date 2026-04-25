@@ -305,31 +305,39 @@ export default function Customer() {
             <div className="divide-y divide-border">
               {filteredCustomers.map((customer) => (
                 <div key={customer.id}>
-                  <div className="grid gap-3 px-5 py-4 sm:grid-cols-[1.2fr_0.8fr_0.8fr_auto_auto] sm:items-center">
+                  <div className="grid grid-cols-2 gap-3 px-5 py-4 sm:grid-cols-[1.2fr_0.8fr_0.8fr_auto_auto] sm:items-center relative">
+                    {/* Expand icon for mobile */}
+                    <div className="absolute right-5 top-5 cursor-pointer sm:hidden" onClick={() => toggleExpand(customer.id)}>
+                      {expandedCustomerId === customer.id
+                        ? <ChevronUp className="size-5 text-primary" />
+                        : <ChevronDown className="size-5 text-ink-soft" />}
+                    </div>
+
                     {/* Name & Phone — clickable to expand */}
-                    <div className="cursor-pointer" onClick={() => toggleExpand(customer.id)}>
+                    <div className="col-span-2 sm:col-span-1 cursor-pointer pr-8 sm:pr-0" onClick={() => toggleExpand(customer.id)}>
                       <div className="font-semibold text-ink">{customer.name}</div>
                       <div className="flex items-center gap-1.5 text-sm text-ink-soft mt-1">
                         <Phone className="size-3" />
                         {customer.phone}
                       </div>
                     </div>
+
                     <div className="text-sm font-medium text-ink-soft sm:text-right cursor-pointer" onClick={() => toggleExpand(customer.id)}>
                       Rs. {customer.balance.toLocaleString()}
                     </div>
-                    <div className="text-sm text-ink-soft sm:text-right cursor-pointer" onClick={() => toggleExpand(customer.id)}>
+                    <div className="text-sm text-ink-soft text-right cursor-pointer" onClick={() => toggleExpand(customer.id)}>
                       {formatDate(customer.last_activity)}
                     </div>
 
                     {/* Action buttons: Info, Edit, Expand, Delete */}
-                    <div className="flex justify-end items-center gap-1">
+                    <div className="flex items-center gap-1 pt-2 border-t border-border/50 sm:border-0 sm:pt-0 sm:justify-end">
                       <button onClick={() => openInfo(customer)} title="Full history" className="flex size-8 items-center justify-center rounded-full border border-transparent text-ink-soft hover:border-primary/30 hover:bg-primary/5 hover:text-primary transition-all">
                         <Info className="size-4" />
                       </button>
                       <button onClick={() => { setEditCustomer(customer); setEditName(customer.name); setEditPhone(customer.phone); setEditBalance(String(customer.balance)); }} title="Edit customer" className="flex size-8 items-center justify-center rounded-full border border-transparent text-ink-soft hover:border-amber-300 hover:bg-amber-50 hover:text-amber-600 transition-all">
                         <Pencil className="size-4" />
                       </button>
-                      <div className="cursor-pointer" onClick={() => toggleExpand(customer.id)}>
+                      <div className="cursor-pointer hidden sm:block" onClick={() => toggleExpand(customer.id)}>
                         {expandedCustomerId === customer.id
                           ? <ChevronUp className="size-5 text-primary" />
                           : <ChevronDown className="size-5 text-ink-soft" />}
@@ -337,7 +345,7 @@ export default function Customer() {
                     </div>
 
                     {/* Delete button */}
-                    <div className="flex justify-end">
+                    <div className="flex justify-end pt-2 border-t border-border/50 sm:border-0 sm:pt-0">
                       {confirmDeleteId === customer.id ? (
                         <div className="flex items-center gap-1.5">
                           <button

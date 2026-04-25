@@ -178,7 +178,7 @@ export default function ImportSheet() {
               </div>
             ) : (
               <>
-                <div className="grid gap-3 text-xs uppercase tracking-[0.2em] text-ink-soft sm:grid-cols-[1fr_0.8fr_1fr_0.8fr] mb-4">
+                <div className="hidden sm:grid gap-3 text-xs uppercase tracking-[0.2em] text-ink-soft sm:grid-cols-[1fr_0.8fr_1fr_0.8fr] mb-4">
                   <span>Name</span>
                   <span className="sm:text-right">Amount (PKR)</span>
                   <span>Phone Number</span>
@@ -187,19 +187,19 @@ export default function ImportSheet() {
 
                 <div className="divide-y divide-border rounded-[24px] border border-border bg-surface/35 overflow-hidden">
                   {rows.map((row) => (
-                    <div key={row.id} className="grid gap-3 px-4 py-4 text-sm sm:grid-cols-[1fr_0.8fr_1fr_0.8fr] sm:items-center">
+                    <div key={row.id} className="grid grid-cols-2 gap-3 px-4 py-4 text-sm sm:grid-cols-[1fr_0.8fr_1fr_0.8fr] sm:items-center">
                       <div className="font-semibold text-ink">{row.name}</div>
-                      <div className="sm:text-right font-medium text-ink-soft">Rs. {row.amount}</div>
-                      <div>
+                      <div className="text-right sm:text-right font-medium text-ink-soft">Rs. {row.amount}</div>
+                      <div className="col-span-2 sm:col-span-1">
                         <input
                           type="text"
                           value={row.phone}
                           onChange={(e) => handlePhoneChange(row.id, e.target.value)}
-                          placeholder="e.g. 0300-1234567"
+                          placeholder="Phone number e.g. 0300-1234567"
                           className={`w-full bg-background border rounded-lg px-3 py-1.5 text-sm outline-none focus:border-primary ${!row.phone.trim() ? "border-red-400" : "border-border"}`}
                         />
                       </div>
-                      <div className="sm:text-right flex items-center justify-end gap-1.5">
+                      <div className="col-span-2 sm:col-span-1 flex items-center justify-start sm:justify-end gap-1.5">
                         {row.status === "Phone required" && <AlertCircle className="size-4 text-red-500" />}
                         {row.status === "Ready" && <CheckCircle2 className="size-4 text-green-600" />}
                         <span className={

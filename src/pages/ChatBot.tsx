@@ -76,7 +76,7 @@ export default function ChatBot() {
       }
     >
       <div className="grid gap-6 xl:grid-cols-[1.15fr_0.85fr]">
-        <div className="flex h-[600px] flex-col rounded-[30px] border border-border bg-background shadow-lg shadow-primary/5 overflow-hidden">
+        <div className="flex h-[calc(100vh-200px)] min-h-[450px] sm:h-[600px] flex-col rounded-[30px] border border-border bg-background shadow-lg shadow-primary/5 overflow-hidden">
           <div className="flex items-center justify-between gap-3 border-b border-border px-6 py-5 shrink-0">
             <div>
               <div className="text-[11px] font-semibold uppercase tracking-[0.25em] text-primary">Live Assistant</div>

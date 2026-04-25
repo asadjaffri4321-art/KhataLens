@@ -69,6 +69,14 @@ export function DashboardShell({ title, subtitle, actions, children }: Dashboard
                   </NavLink>
                 );
               })}
+              <button
+                type="button"
+                onClick={() => setShowLogoutConfirm(true)}
+                className="inline-flex items-center gap-2 rounded-full border border-red-300/25 bg-red-500/10 px-4 py-2 text-sm font-medium text-red-600 transition-colors"
+              >
+                <LogOut className="size-4" />
+                Log Out
+              </button>
             </div>
           </div>
         </header>
