@@ -1,0 +1,9 @@
+node_modules/
+.git/
+.kiro/
+__pycache__/
+*.pyc
+.env
+.DS_Store
+*.db
+.vscode/

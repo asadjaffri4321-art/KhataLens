@@ -17,6 +17,7 @@ const Logo = () => (
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  
   useEffect(() => {
     const onScroll = () => setIsScrolled(window.scrollY > 8);
     onScroll();
@@ -30,6 +31,17 @@ const Header = () => {
     return () => { document.body.style.overflow = ""; };
   }, [mobileMenuOpen]);
 
+  const navLinks = [
+    { href: "#features", label: "AI Layers" },
+    { href: "#how", label: "How it works" },
+    { href: "#problem", label: "Why KhataLens" },
+    { href: "#testimonials", label: "Impact" },
+  ];
+
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    setMobileMenuOpen(false);
+  };
+
   return (
   <>
   <header
@@ -40,28 +52,34 @@ const Header = () => {
         : "border-b border-transparent bg-transparent"
     )}
   >
-    <div className="container h-full flex items-center justify-between">
+    <div className="container h-full flex items-center justify-between px-4 sm:px-6">
       <Logo />
-      <nav className="hidden md:flex items-center gap-10 text-sm font-medium text-ink-soft">
-        <a href="#features" className="hover:text-primary transition-colors">AI Layers</a>
-        <a href="#how" className="hover:text-primary transition-colors">How it works</a>
-        <a href="#problem" className="hover:text-primary transition-colors">Why KhataLens</a>
-        <a href="#testimonials" className="hover:text-primary transition-colors">Impact</a>
+      
+      {/* Desktop Navigation */}
+      <nav className="hidden md:flex items-center gap-6 lg:gap-10 text-sm font-medium text-ink-soft">
+        {navLinks.map(link => (
+          <a key={link.href} href={link.href} className="hover:text-primary transition-colors">
+            {link.label}
+          </a>
+        ))}
       </nav>
+      
       <div className="flex items-center gap-3">
+        {/* Desktop CTA */}
         <motion.a 
           whileHover={{ scale: 1.05, y: -1 }}
           whileTap={{ scale: 0.95 }}
           href="/login" 
-          className="hidden sm:inline-flex items-center gap-2 rounded-full bg-primary text-primary-foreground px-5 py-2.5 text-sm font-semibold transition-all shadow-md hover:shadow-lg hover:shadow-primary/20"
+          className="hidden sm:inline-flex items-center gap-2 rounded-full bg-primary text-primary-foreground px-4 sm:px-5 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold transition-all shadow-md hover:shadow-lg hover:shadow-primary/20"
         >
           Try KhataLens
-          <ArrowRight className="size-4" />
+          <ArrowRight className="size-3 sm:size-4" />
         </motion.a>
+        
         {/* Mobile hamburger */}
         <button
           onClick={() => setMobileMenuOpen(true)}
-          className="md:hidden flex size-10 items-center justify-center rounded-full border border-border text-ink hover:bg-surface/50 transition-colors"
+          className="md:hidden flex size-10 items-center justify-center rounded-full border border-border bg-background/80 text-ink hover:bg-surface/50 transition-colors"
           aria-label="Open menu"
         >
           <Menu className="size-5" />
@@ -70,58 +88,67 @@ const Header = () => {
     </div>
   </header>
 
-  {/* Mobile slide-in menu */}
+  {/* Mobile Menu Overlay */}
   <AnimatePresence>
     {mobileMenuOpen && (
       <>
+        {/* Backdrop */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 z-[60] bg-black/40 backdrop-blur-sm"
           onClick={() => setMobileMenuOpen(false)}
+          className="fixed inset-0 bg-ink/60 backdrop-blur-sm z-[60] md:hidden"
         />
+        
+        {/* Menu Panel */}
         <motion.div
           initial={{ x: "100%" }}
           animate={{ x: 0 }}
           exit={{ x: "100%" }}
-          transition={{ type: "spring", damping: 30, stiffness: 300 }}
-          className="fixed top-0 right-0 bottom-0 z-[70] w-72 bg-background border-l border-border shadow-2xl flex flex-col"
+          transition={{ type: "spring", damping: 25, stiffness: 200 }}
+          className="fixed top-0 right-0 bottom-0 w-[280px] bg-background border-l border-border shadow-2xl z-[70] md:hidden"
         >
-          <div className="flex items-center justify-between p-5 border-b border-border">
-            <span className="text-xs font-bold uppercase tracking-[0.25em] text-ink-soft">Menu</span>
-            <button
-              onClick={() => setMobileMenuOpen(false)}
-              className="flex size-9 items-center justify-center rounded-full border border-border text-ink-soft hover:bg-surface/50"
-            >
-              <X className="size-4" />
-            </button>
-          </div>
-          <nav className="flex-1 flex flex-col gap-1 p-4">
-            {[
-              { href: "#features", label: "AI Layers" },
-              { href: "#how", label: "How it works" },
-              { href: "#problem", label: "Why KhataLens" },
-              { href: "#testimonials", label: "Impact" },
-            ].map(link => (
-              <a
-                key={link.href}
-                href={link.href}
+          <div className="flex flex-col h-full">
+            {/* Header */}
+            <div className="flex items-center justify-between p-4 border-b border-border">
+              <Logo />
+              <button
                 onClick={() => setMobileMenuOpen(false)}
-                className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-ink hover:bg-primary/5 hover:text-primary transition-colors"
+                className="flex size-10 items-center justify-center rounded-full hover:bg-surface/50 transition-colors"
+                aria-label="Close menu"
               >
-                {link.label}
+                <X className="size-5" />
+              </button>
+            </div>
+            
+            {/* Navigation Links */}
+            <nav className="flex-1 overflow-y-auto p-6">
+              <ul className="space-y-1">
+                {navLinks.map(link => (
+                  <li key={link.href}>
+                    <a
+                      href={link.href}
+                      onClick={handleNavClick}
+                      className="flex items-center gap-3 px-4 py-3 rounded-lg text-ink font-medium hover:bg-primary/10 hover:text-primary transition-colors"
+                    >
+                      {link.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+            
+            {/* CTA Button */}
+            <div className="p-6 border-t border-border">
+              <a
+                href="/login"
+                className="flex items-center justify-center gap-2 w-full rounded-full bg-primary text-primary-foreground px-5 py-3 text-sm font-semibold shadow-lg hover:shadow-xl transition-all"
+              >
+                Try KhataLens
+                <ArrowRight className="size-4" />
               </a>
-            ))}
-          </nav>
-          <div className="p-4 border-t border-border">
-            <a
-              href="/login"
-              className="flex items-center justify-center gap-2 rounded-full bg-primary text-primary-foreground px-5 py-3 text-sm font-semibold shadow-md w-full"
-            >
-              Try KhataLens
-              <ArrowRight className="size-4" />
-            </a>
+            </div>
           </div>
         </motion.div>
       </>

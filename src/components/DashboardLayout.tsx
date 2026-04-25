@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { NavLink, Outlet, useNavigate } from 'react-router-dom';
+import { NavLink, Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
-import { BarChart3, Users, FileSpreadsheet, MessageCircle, LogOut, Menu, X } from 'lucide-react';
+import { BarChart3, Users, FileSpreadsheet, MessageCircle, LogOut, Menu, X, ChevronDown } from 'lucide-react';
 
 const navItems = [
   { to: '/dashboard/analytics', label: 'Analytics', icon: BarChart3 },
@@ -13,11 +13,22 @@ const navItems = [
 export const DashboardLayout = () => {
   const { shopkeeper, signOut } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const handleSignOut = async () => {
     await signOut();
     navigate('/');
+  };
+
+  // Get current page info
+  const currentPage = navItems.find(item => location.pathname === item.to) || navItems[0];
+
+  const handleNavClick = (to: string) => {
+    navigate(to);
+    setDropdownOpen(false);
+    setSidebarOpen(false);
   };
 
   return (
@@ -110,8 +121,49 @@ export const DashboardLayout = () => {
           >
             <Menu className="size-6" />
           </button>
-          <div className="flex-1" />
-          <div className="text-sm text-ink-soft">
+          
+          {/* Mobile Page Dropdown */}
+          <div className="relative flex-1 max-w-xs">
+            <button
+              onClick={() => setDropdownOpen(!dropdownOpen)}
+              className="flex items-center justify-between w-full px-4 py-2 rounded-lg border border-border bg-surface hover:bg-surface/80 transition-colors"
+            >
+              <div className="flex items-center gap-2">
+                <currentPage.icon className="size-5 text-primary" />
+                <span className="text-sm font-medium text-ink">{currentPage.label}</span>
+              </div>
+              <ChevronDown className={`size-4 text-ink-soft transition-transform ${dropdownOpen ? 'rotate-180' : ''}`} />
+            </button>
+
+            {/* Dropdown Menu */}
+            {dropdownOpen && (
+              <>
+                <div
+                  className="fixed inset-0 z-40"
+                  onClick={() => setDropdownOpen(false)}
+                />
+                <div className="absolute top-full left-0 right-0 mt-2 bg-background border border-border rounded-lg shadow-xl z-50 overflow-hidden">
+                  {navItems.map((item) => (
+                    <button
+                      key={item.to}
+                      onClick={() => handleNavClick(item.to)}
+                      className={`w-full flex items-center gap-3 px-4 py-3 text-sm font-medium transition-colors ${
+                        location.pathname === item.to
+                          ? 'bg-primary/10 text-primary'
+                          : 'text-ink hover:bg-surface'
+                      }`}
+                    >
+                      <item.icon className="size-5" />
+                      {item.label}
+                    </button>
+                  ))}
+                </div>
+              </>
+            )}
+          </div>
+
+          <div className="hidden md:block flex-1" />
+          <div className="text-sm text-ink-soft hidden sm:block">
             {shopkeeper?.shop_name || shopkeeper?.name || 'My Shop'}
           </div>
         </header>
