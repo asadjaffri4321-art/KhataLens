@@ -1,16 +1,11 @@
-# Nixpacks configuration for Railway
+# Nixpacks configuration for Backend only
 
 [phases.setup]
-nixPkgs = ["python311", "nodejs-18_x"]
+nixPkgs = ["python311", "pip"]
+aptPkgs = ["python3-pip"]
 
 [phases.install]
-cmds = [
-  "pip install -r requirements.txt",
-  "npm install"
-]
-
-[phases.build]
-cmds = ["npm run build"]
+cmds = ["python -m pip install --upgrade pip", "python -m pip install -r requirements.txt"]
 
 [start]
-cmd = "uvicorn api:app --host 0.0.0.0 --port $PORT"
+cmd = "python -m uvicorn api:app --host 0.0.0.0 --port $PORT"
