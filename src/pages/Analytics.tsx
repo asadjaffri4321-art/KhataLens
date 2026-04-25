@@ -25,7 +25,7 @@ export default function Analytics() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch("http://localhost:8000/api/analytics")
+    fetch(`${import.meta.env.VITE_API_URL}/api/analytics`)
       .then((res) => {
         if (!res.ok) throw new Error("Failed to load analytics");
         return res.json();

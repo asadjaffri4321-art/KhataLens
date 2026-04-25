@@ -64,7 +64,7 @@ export default function Customer() {
 
   const fetchStats = async () => {
     try {
-      const res = await fetch("http://localhost:8000/api/stats");
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/stats`);
       if (res.ok) {
         const data = await res.json();
         setStats(data);
@@ -77,7 +77,7 @@ export default function Customer() {
   const fetchCustomers = async () => {
     try {
       setLoading(true);
-      const res = await fetch("http://localhost:8000/api/customers");
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/customers`);
       if (!res.ok) throw new Error("Failed to fetch customers");
       const data = await res.json();
       setCustomers(data.map((c: any) => ({ ...c, last_activity: c.created_at || new Date().toISOString() })));
@@ -91,7 +91,7 @@ export default function Customer() {
   const fetchCustomerTransactions = async (customerId: string) => {
     if (customerTransactions[customerId]) return;
     try {
-      const res = await fetch(`http://localhost:8000/api/transactions/${customerId}`);
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/transactions/${customerId}`);
       if (!res.ok) throw new Error("Failed to fetch transactions");
       const data = await res.json();
       setCustomerTransactions(prev => ({ ...prev, [customerId]: data || [] }));
@@ -103,7 +103,7 @@ export default function Customer() {
   const handleDeleteCustomer = async (customerId: string) => {
     setDeletingId(customerId);
     try {
-      const res = await fetch(`http://localhost:8000/api/customers/${customerId}`, { method: "DELETE" });
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/customers/${customerId}`, { method: "DELETE" });
       if (!res.ok) throw new Error("Failed to delete customer");
       setCustomers(prev => prev.filter(c => c.id !== customerId));
       if (expandedCustomerId === customerId) setExpandedCustomerId(null);
@@ -120,7 +120,7 @@ export default function Customer() {
   const handleDeleteAll = async () => {
     setDeletingAll(true);
     try {
-      const res = await fetch("http://localhost:8000/api/customers/all", { method: "DELETE" });
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/customers/all`, { method: "DELETE" });
       if (!res.ok) throw new Error("Failed to delete all customers");
       setCustomers([]);
       setCustomerTransactions({});
@@ -140,7 +140,7 @@ export default function Customer() {
     if (!amount || amount <= 0) return toast.error("Enter a valid amount");
     setSubmittingPayment(true);
     try {
-      const res = await fetch("http://localhost:8000/api/payment", {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/payment`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -183,7 +183,7 @@ export default function Customer() {
   const openInfo = async (customer: Customer) => {
     setInfoCustomer(customer);
     try {
-      const res = await fetch(`http://localhost:8000/api/transactions/${customer.id}`);
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/transactions/${customer.id}`);
       const data = await res.json();
       setInfoTransactions(data || []);
     } catch { setInfoTransactions([]); }
@@ -193,7 +193,7 @@ export default function Customer() {
     if (!editCustomer) return;
     setSavingEdit(true);
     try {
-      const res = await fetch(`http://localhost:8000/api/customers/${editCustomer.id}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/customers/${editCustomer.id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name: editName, phone: editPhone, balance: parseFloat(editBalance) })

@@ -28,7 +28,7 @@ export default function ImportSheet() {
       const formData = new FormData();
       formData.append("file", file);
       
-      const res = await fetch("http://localhost:8000/api/extract", {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/extract`, {
         method: "POST",
         body: formData,
       });
@@ -87,7 +87,7 @@ export default function ImportSheet() {
     setIsImporting(true);
     
     try {
-      const res = await fetch("http://localhost:8000/api/import", {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/import`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -238,4 +238,4 @@ export default function ImportSheet() {
       </div>
     </DashboardShell>
   );
-}
+}
